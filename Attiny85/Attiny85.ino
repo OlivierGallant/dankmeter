@@ -8,7 +8,7 @@
 #define R_LOAD 200000 //Load resistance of 200k
 
 
-char temp_str[4];
+char tmp_str[4];
 
 int sensor_read;
 int V_sensor;
@@ -19,6 +19,8 @@ int Conversion;
 int R_0;
 int startButton;
 int loopTime;
+int R_AIR;
+int R_S;
 
 void setup() 
 {
@@ -33,23 +35,29 @@ void setup()
 
 void loop() 
 {
-  while startButton < 512 {
+/*  while (startButton < 512) {
     startButton = analogRead(START_PIN);
   }
-  
-  while startButton > 512 && loopTime < 6 {
+*/ 
+  startButton = 0; 
+  while (startButton < 512) {
+  startButton = analogRead(START_PIN);
   V_sensor = (5-(analogRead(ADC_PIN)*5/1024));
   R_S = V_sensor/(1-V_sensor)*R_LOAD; 
   R_Ratio = R_S/R_0;
-  BAC_VALUE = R_Ratio = ...;
+  BAC_VALUE = R_Ratio*2;
   BAC_VALUE = BAC_VALUE*524;
-  delay(1000);
-  loopTime++;
+  Wire.beginTransmission(DISPLAY_ADRESS);
+  for (int i =0; i < 4; i++){
+    Wire.write(tmp_str[i]);
   }
-  sprintf(temp_str, "%d", BAC_VALUE);
+  loopTime++;
+
+  }
+  sprintf(tmp_str, "%d", BAC_VALUE);
   
   Wire.beginTransmission(DISPLAY_ADRESS);
   for (int i =0; i < 4; i++){
-    Wire.write(tmp_string[i])
+    Wire.write(tmp_str[i]);
   }
 }
